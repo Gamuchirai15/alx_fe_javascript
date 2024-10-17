@@ -6,8 +6,6 @@ let quotes = [
 
 ["innerHTML"]
 
-["createAddQuoteForm"]
-
 function showRandomQuote() {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const quote = quotes[randomIndex];
@@ -26,6 +24,8 @@ function addQuote() {
     } else {
         alert("Please enter both quote and category.");
     }
+
+    ["createAddQuoteForm"]
 }
 
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
