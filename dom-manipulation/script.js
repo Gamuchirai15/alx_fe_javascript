@@ -4,8 +4,6 @@ let quotes = [
     { text: "The future belongs to those who believe in the beauty of their dreams.", category: "Inspiration" }
 ];
 
-["innerHTML"]
-
 function showRandomQuote() {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const quote = quotes[randomIndex];
