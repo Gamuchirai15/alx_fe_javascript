@@ -76,15 +76,37 @@ function createAddQuoteForm() {
 }
 
 
-function addQuote() {
+async function addQuote() {
     const newQuoteText = document.getElementById("newQuoteText").value;
     const newQuoteCategory = document.getElementById("newQuoteCategory").value;
 
     if (newQuoteText && newQuoteCategory) {
-        quotes.push({ text: newQuoteText, category: newQuoteCategory });
-        document.getElementById("newQuoteText").value = '';
-        document.getElementById("newQuoteCategory").value = '';
-        showRandomQuote();
+        const newQuote = { text: newQuoteText, category: newQuoteCategory };
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newQuote)
+            });
+
+            if (response.ok) {
+                quotes.push(newQuote);
+                saveQuotes(); // Save to local storage
+                document.getElementById("newQuoteText").value = '';
+                document.getElementById("newQuoteCategory").value = '';
+                showRandomQuote();
+                alert('Quote added successfully!');
+            } else {
+                alert('Failed to add quote. Please try again.');
+            }
+        } catch (error) {
+            console.error("Error adding quote:", error);
+            alert('Failed to add quote. Please check your connection.');
+        }
+
     } else {
         alert("Please enter both quote and category.");
     }
