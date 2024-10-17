@@ -6,13 +6,13 @@ let quotes = [
 
 ["innerHTML"]
 
+["createAddQuoteForm"]
+
 function showRandomQuote() {
     const randomIndex = Math.floor(Math.random() * quotes.length);
     const quote = quotes[randomIndex];
     document.getElementById("quoteDisplay").innerText = `"${quote.text}" - ${quote.category}`;
 }
-
-["createAddQuoteForm"]
 
 function addQuote() {
     const newQuoteText = document.getElementById("newQuoteText").value;
