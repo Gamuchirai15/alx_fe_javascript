@@ -177,6 +177,40 @@ function showConflictNotification(newQuotes) {
 
 setInterval(fetchQuotesFromServer, 30000);
 
+function syncQuotes(fetchedQuotes) {
+    const localQuotesSet = new Set(quotes.map(q => JSON.stringify(q)));
+    const newQuotes = [];
+
+    fetchedQuotes.forEach(fetchedQuote => {
+        if (!localQuotesSet.has(JSON.stringify(fetchedQuote))) {
+            newQuotes.push(fetchedQuote);
+        }
+    });
+
+    if (newQuotes.length > 0) {
+        quotes.push(...newQuotes);
+        saveQuotes();
+        showConflictNotification(newQuotes);
+        alert('Quotes synced with server!'); // Notify user about the sync
+    }
+}
+
+// Show notification for new quotes
+function showConflictNotification(newQuotes) {
+    const notification = document.createElement("div");
+    notification.innerText = `${newQuotes.length} new quotes added from the server.`;
+    notification.style.backgroundColor = "#f0c36d";
+    notification.style.padding = "10px";
+    notification.style.margin = "10px 0";
+    document.body.prepend(notification);
+
+    // Automatically remove the notification after a few seconds
+    setTimeout(() => {
+        notification.remove();
+    }, 5000); // Notification will disappear after 5 seconds
+}
+
+
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 document.getElementById("exportButton").addEventListener("click", exportQuotes);
 document.getElementById("importFile").addEventListener("change", importFromJsonFile);
