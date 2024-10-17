@@ -111,10 +111,53 @@ function importFromJsonFile(event) {
     fileReader.readAsText(event.target.files[0]);
 }
 
+async function fetchQuotesFromServer() {
+    try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        const fetchedQuotes = data.map(item => ({
+            text: item.title,
+            category: item.userId.toString() // Simulating categories with userId
+        }));
+        syncQuotes(fetchedQuotes);
+    } catch (error) {
+        console.error("Error fetching quotes:", error);
+    }
+}
+
+function syncQuotes(fetchedQuotes) {
+    const localQuotesSet = new Set(quotes.map(q => JSON.stringify(q)));
+    const newQuotes = [];
+
+    fetchedQuotes.forEach(fetchedQuote => {
+        if (!localQuotesSet.has(JSON.stringify(fetchedQuote))) {
+            newQuotes.push(fetchedQuote);
+        }
+    });
+
+    if (newQuotes.length > 0) {
+        quotes.push(...newQuotes);
+        saveQuotes();
+        showConflictNotification(newQuotes);
+    }
+}
+
+function showConflictNotification(newQuotes) {
+    const notification = document.createElement("div");
+    notification.innerText = `${newQuotes.length} new quotes added from the server.`;
+    notification.style.backgroundColor = "#f0c36d";
+    notification.style.padding = "10px";
+    notification.style.margin = "10px 0";
+    document.body.prepend(notification);
+}
+
+setInterval(fetchQuotesFromServer, 30000);
+
 document.getElementById("newQuote").addEventListener("click", showRandomQuote);
 document.getElementById("exportButton").addEventListener("click", exportQuotes);
 document.getElementById("importFile").addEventListener("change", importFromJsonFile);
 
 loadQuotes();
 createAddQuoteForm();
+populateCategories();
 showRandomQuote();
