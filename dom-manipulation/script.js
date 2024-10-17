@@ -4,6 +4,8 @@ let quotes = [
     { text: "The future belongs to those who believe in the beauty of their dreams.", category: "Inspiration" }
 ];
 
+const API_URL = "https://jsonplaceholder.typicode.com/posts";
+
 function loadQuotes() {
     const storedQuotes = localStorage.getItem('quotes');
     if (storedQuotes) {
